@@ -1,4 +1,4 @@
-package com.bluecat94.taskalert;
+package com.bluecat94.taskalert.ui;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.bluecat94.taskalert.R;
 
 public class TaskListActivity extends AppCompatActivity {
 

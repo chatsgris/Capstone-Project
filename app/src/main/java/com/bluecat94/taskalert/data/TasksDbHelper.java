@@ -23,7 +23,7 @@ public class TasksDbHelper extends SQLiteOpenHelper {
                 TasksContract.TaskEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
                 TasksContract.TaskEntry.COLUMN_LATITTUDE + " FLOAT NOT NULL" +
                 TasksContract.TaskEntry.COLUMN_LONGITUDE + " FLOAT NOT NULL" +
-                TasksContract.TaskEntry.COLUMN_TS_CREATED + " INTEGER NOT NULL" +
+                TasksContract.TaskEntry.COLUMN_TS_CREATED + " DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP" +
                 "); ";
         db.execSQL(SQL_CREATE_TASKS_TABLE);
     }

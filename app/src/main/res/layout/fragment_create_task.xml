@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.bluecat94.taskalert.ui.CreateTaskActivityFragment"
+    tools:showIn="@layout/activity_create_task">
+
+    <TextView
+        android:id="@+id/task_title_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Title: "
+        app:layout_constraintTop_toTopOf="parent" 
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textStyle="bold"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/task_description_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description: "
+        app:layout_constraintTop_toBottomOf="@id/task_title_name"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textStyle="bold"
+        android:textSize="16sp"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="69dp" />
+    
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        app:layout_constraintStart_toStartOf="@id/task_title_name"
+        android:layout_marginStart="16dp"
+        tools:text=""/>
+
+</android.support.constraint.ConstraintLayout>
