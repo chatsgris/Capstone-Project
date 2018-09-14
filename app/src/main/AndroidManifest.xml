@@ -53,6 +53,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bluecat94.taskalert.ui.TaskListActivity" />
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA7saK3RaUz-IjVw8ErDSiGRlA3oGQALzY"/>
     </application>
 
 </manifest>
