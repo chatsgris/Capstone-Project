@@ -5,13 +5,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bluecat94.taskalert.R;
+
+import butterknife.BindView;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class CreateTaskActivityFragment extends Fragment {
+    @BindView(R.id.task_title_name) TextView taskTitleNameTv;
+
 
     public CreateTaskActivityFragment() {
     }

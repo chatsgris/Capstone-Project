@@ -47,13 +47,15 @@
         android:id="@+id/task_description_value"/>
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/task_title_name"
         tools:text="Buy food from supermarket"
         android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:id="@+id/task_title_value"
-        app:layout_constraintTop_toBottomOf="@id/task_title_name"/>
+        app:layout_constraintTop_toBottomOf="@id/task_title_name"
+        android:focusedByDefault="true"/>
 
     <TextView
         android:id="@+id/task_venue_name"
