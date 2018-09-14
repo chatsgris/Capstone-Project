@@ -45,10 +45,14 @@ public class TaskListActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+                return true;
+            case R.id.action_about:
+                Intent intent = new Intent(this, AboutActivity.class);
+                this.startActivity(intent);
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }
