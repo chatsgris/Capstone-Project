@@ -2,6 +2,7 @@ package com.bluecat94.taskalert.helper;
 
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
+import android.database.Cursor;
 import android.net.Uri;
 
 /**
@@ -17,4 +18,7 @@ public class TasksAsyncHandler extends AsyncQueryHandler {
 
     @Override
     protected void onDeleteComplete(int token, Object cookie, int result) {}
+
+    @Override
+    protected void onQueryComplete(int token, Object cookie, Cursor cursor) {}
 }
