@@ -1,6 +1,10 @@
 package com.bluecat94.taskalert.ui;
 
+import android.app.AlertDialog;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,10 +17,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bluecat94.taskalert.R;
+import com.bluecat94.taskalert.data.TasksContract;
+import com.bluecat94.taskalert.helper.TasksAsyncHandler;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,16 +34,16 @@ import static android.app.Activity.RESULT_OK;
  * A placeholder fragment containing a simple view.
  */
 public class CreateTaskActivityFragment extends Fragment {
-    @BindView(R.id.task_title_name) TextView taskTitleTv;
     @BindView(R.id.task_title_value) EditText taskTitleEt;
-    @BindView(R.id.task_description_name) TextView taskDescriptionTv;
     @BindView(R.id.task_description_value) EditText taskDescriptionEt;
-    @BindView(R.id.task_venue_name) TextView taskVenueTv;
     @BindView(R.id.image_place_picker) ImageView placePickerImage;
-    @BindView(R.id.text_place_picker) TextView placePickerTv;
     @BindView(R.id.button_place_picker) Button placePickerButton;
 
     private final static int PLACE_PICKER_REQUEST = 999;
+    private String mTitle;
+    private String mDescription;
+    private float mLat;
+    private float mLong;
 
     public CreateTaskActivityFragment() {
     }
@@ -47,8 +54,8 @@ public class CreateTaskActivityFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_create_task, container, false);
         ButterKnife.bind(this, view);
 
-        String title = taskTitleEt.getText().toString();
-        String description = taskDescriptionEt.getText().toString();
+        mTitle = taskTitleEt.getText().toString();
+        mDescription = taskDescriptionEt.getText().toString();
 
         placePickerImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +70,14 @@ public class CreateTaskActivityFragment extends Fragment {
                 }
             }
         });
+
+        placePickerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNewTask();
+            }
+        });
+
         return view;
     }
 
@@ -70,9 +85,43 @@ public class CreateTaskActivityFragment extends Fragment {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this.getContext(), data);
-                String toastMsg = String.format("Place: %s", place.getName());
+                mLat = (float) place.getLatLng().latitude;
+                mLong = (float) place.getLatLng().longitude;
+                String toastMsg = String.format("Venue: %s, %s", String.valueOf(mLat), String.valueOf(mLong));
                 Toast.makeText(this.getContext(), toastMsg, Toast.LENGTH_LONG).show();
             }
+        }
+    }
+
+    public void addNewTask() {
+        if (mTitle == null || (mLong == 0 && mLat == 0)) {
+            AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+            alertDialog.setTitle(getResources().getString(R.string.create_task_error_title));
+            alertDialog.setMessage(getResources().getString(R.string.create_task_error_content));
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+        } else {
+            ContentValues cv = new ContentValues();
+            cv.put("Title", mTitle);
+            cv.put("Description", mDescription);
+            cv.put("Lat", mLat);
+            cv.put("Long", mLong);
+
+            TasksAsyncHandler tasksAsyncHandler = new TasksAsyncHandler(getContext().getContentResolver()) {
+                @Override
+                protected void onInsertComplete(int token, Object cookie, Uri uri) {
+                    if(uri != null) {
+                        Toast.makeText(getContext(), "New task created", Toast.LENGTH_LONG).show();
+                    }
+                }
+            };
+            tasksAsyncHandler.startInsert(1, null, TasksContract.TaskEntry.CONTENT_URI, cv);
+            getActivity().finish();
         }
     }
 }
