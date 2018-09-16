@@ -58,9 +58,6 @@ public class CreateTaskActivityFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_create_task, container, false);
         ButterKnife.bind(this, view);
 
-        mTitle = taskTitleEt.getText().toString();
-        mDescription = taskDescriptionEt.getText().toString();
-
         placePickerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,7 +95,10 @@ public class CreateTaskActivityFragment extends Fragment {
     }
 
     public void addNewTask() {
-        if (mTitle == null || (mLong == 0 && mLat == 0)) {
+        mTitle = taskTitleEt.getText().toString();
+        mDescription = taskDescriptionEt.getText().toString();
+
+        if ((mTitle == null || mTitle.startsWith(" ") || mTitle.startsWith("\n")) || (mLong == 0 && mLat == 0)) {
             AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
             alertDialog.setTitle(getResources().getString(R.string.create_task_error_title));
             alertDialog.setMessage(getResources().getString(R.string.create_task_error_content));

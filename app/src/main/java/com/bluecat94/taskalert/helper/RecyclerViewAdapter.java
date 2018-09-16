@@ -46,7 +46,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (mCursor != null) {
             mCursor.moveToPosition(position);
-            String title = String.valueOf(mCursor.getFloat(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_LATITTUDE)));
+            String title = mCursor.getString(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_TITLE));
             holder.taskTitle.setText(title);
         }
     }
