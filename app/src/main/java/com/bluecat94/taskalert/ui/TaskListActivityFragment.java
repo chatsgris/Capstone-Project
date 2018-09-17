@@ -7,14 +7,18 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bluecat94.taskalert.R;
 import com.bluecat94.taskalert.data.TasksContract;
 import com.bluecat94.taskalert.helper.RecyclerViewAdapter;
+import com.bluecat94.taskalert.helper.TasksAsyncHandler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,18 +47,36 @@ public class TaskListActivityFragment extends Fragment implements LoaderManager.
         mAdapter = new RecyclerViewAdapter(getContext());
         mRecyclerView.setAdapter(mAdapter);
         getLoaderManager().initLoader(LOADER_ID, null, this);
+
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START | ItemTouchHelper.END) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                final int position = viewHolder.getAdapterPosition();
+                mAdapter.removeItem(position);
+                mAdapter.notifyItemRemoved(position);
+                onResume();
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
         return view;
     }
 
     @Override
     public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, final Bundle loaderArgs) {
         return new AsyncTaskLoader<Cursor>(getContext()) {
-            Cursor mCursor = null;
+            Cursor c = null;
 
             @Override
             protected void onStartLoading() {
-                if (mCursor != null) {
-                    deliverResult(mCursor);
+                if (c != null) {
+                    deliverResult(c);
                 } else {
                     forceLoad();
                 }
@@ -76,7 +98,7 @@ public class TaskListActivityFragment extends Fragment implements LoaderManager.
             }
 
             public void deliverResult(Cursor data) {
-                mCursor = data;
+                c = data;
                 super.deliverResult(data);
             }
         };
@@ -84,12 +106,16 @@ public class TaskListActivityFragment extends Fragment implements LoaderManager.
 
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
-        if (mAdapter != null) {mAdapter.swapCursor(data);}
+        if (mAdapter != null) {
+            mAdapter.swapCursor(data);
+        }
     }
 
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
-        if (mAdapter != null) {mAdapter.swapCursor(null);}
+        if (mAdapter != null) {
+            mAdapter.swapCursor(null);
+        }
     }
 
     @Override

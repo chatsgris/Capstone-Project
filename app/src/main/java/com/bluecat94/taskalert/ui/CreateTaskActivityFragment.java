@@ -29,6 +29,8 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -111,6 +113,8 @@ public class CreateTaskActivityFragment extends Fragment {
             alertDialog.show();
         } else {
             ContentValues cv = new ContentValues();
+            long now = new Date().getTime();
+            cv.put(TasksContract.TaskEntry.COLUMN_TS_CREATED, now);
             cv.put(TasksContract.TaskEntry.COLUMN_TITLE, mTitle);
             cv.put(TasksContract.TaskEntry.COLUMN_DESCRIPTION, mDescription);
             cv.put(TasksContract.TaskEntry.COLUMN_LATITTUDE, mLat);

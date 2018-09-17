@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bluecat94.taskalert.R;
 import com.bluecat94.taskalert.data.TasksContract;
@@ -22,18 +23,54 @@ import butterknife.ButterKnife;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private Cursor mCursor;
     private Context mContext;
-
+    private ItemClickListener mClickListener;
+    private long mCreatedTs;
 
     public RecyclerViewAdapter(Context context) {
         this.mContext = context;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        TextView taskTitle;
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        @BindView(R.id.task_item_title) TextView taskTitle;
         ViewHolder(View itemView) {
             super(itemView);
-            taskTitle = itemView.findViewById(R.id.task_item_title);
+            ButterKnife.bind(this, itemView);
         }
+
+        @Override
+        public void onClick(View v) {
+            if (mClickListener != null) {
+                mClickListener.onItemClick(v, mCreatedTs);
+            }
+        }
+    }
+
+    public void removeItem(int position) {
+        mCursor.moveToPosition(position);
+        long createdTs = mCursor.getLong(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_TS_CREATED));
+
+        TasksAsyncHandler tasksAsyncHandler = new TasksAsyncHandler(mContext.getContentResolver()) {
+            @Override
+            protected void onDeleteComplete(int token, Object cookie, int result) {
+                if (result != 0) {
+                    Toast.makeText(mContext, mContext.getResources().getString(R.string.delete_task_toast), Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+        tasksAsyncHandler.startDelete(
+                1,
+                null,
+                TasksContract.TaskEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(createdTs)).build(),
+                null,
+                null);
+    }
+
+    public interface ItemClickListener {
+        void onItemClick(View view, long created_ts);
+    }
+
+    public void setItemClickListener(RecyclerViewAdapter.ItemClickListener itemClickListener) {
+        this.mClickListener = itemClickListener;
     }
 
     @Override
@@ -47,6 +84,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (mCursor != null) {
             mCursor.moveToPosition(position);
             String title = mCursor.getString(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_TITLE));
+            mCreatedTs = mCursor.getLong(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_TS_CREATED));
             holder.taskTitle.setText(title);
         }
     }

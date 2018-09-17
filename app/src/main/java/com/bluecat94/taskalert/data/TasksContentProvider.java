@@ -94,7 +94,7 @@ public class TasksContentProvider extends ContentProvider{
         switch (match) {
             case TASKS_WITH_TS:
                 String ts = uri.getPathSegments().get(1);
-                tasksDeleted = db.delete(TasksContract.TaskEntry.TABLE_NAME, TasksContract.TaskEntry.COLUMN_TS_CREATED + "=", new String[]{ts});
+                tasksDeleted = db.delete(TasksContract.TaskEntry.TABLE_NAME, TasksContract.TaskEntry.COLUMN_TS_CREATED + "=?", new String[]{ts});
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
