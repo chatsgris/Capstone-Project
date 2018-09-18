@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2013 Jake Wharton
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +12,7 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
-  -->
-
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bluecat94.taskalert">
 
@@ -26,14 +24,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <provider
+            android:name=".data.TasksContentProvider"
             android:authorities="com.bluecat94.taskalert"
-            android:name="com.bluecat94.taskalert.data.TasksContentProvider"
-            android:exported="false"/>
+            android:exported="false" />
+
         <activity
             android:name=".ui.TaskListActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -61,7 +60,17 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyA7saK3RaUz-IjVw8ErDSiGRlA3oGQALzY"/>
+            android:value="AIzaSyA7saK3RaUz-IjVw8ErDSiGRlA3oGQALzY" />
+
+        <activity
+            android:name=".ui.TaskDetailActivity"
+            android:label="@string/title_activity_task_detail"
+            android:parentActivityName=".ui.TaskListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bluecat94.taskalert.ui.TaskListActivity" />
+        </activity>
     </application>
 
 </manifest>

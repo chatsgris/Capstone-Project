@@ -26,10 +26,12 @@ import butterknife.ButterKnife;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class TaskListActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class TaskListActivityFragment extends Fragment
+        implements LoaderManager.LoaderCallbacks<Cursor>, RecyclerViewAdapter.ItemClickListener {
     private LinearLayoutManager mLayoutManager;
     private RecyclerViewAdapter mAdapter;
     private static final int LOADER_ID = 0;
+    private Cursor mCursor;
 
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
 
@@ -45,6 +47,7 @@ public class TaskListActivityFragment extends Fragment implements LoaderManager.
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new RecyclerViewAdapter(getContext());
+        mAdapter.setItemClickListener(this);
         mRecyclerView.setAdapter(mAdapter);
         getLoaderManager().initLoader(LOADER_ID, null, this);
 
@@ -109,6 +112,7 @@ public class TaskListActivityFragment extends Fragment implements LoaderManager.
         if (mAdapter != null) {
             mAdapter.swapCursor(data);
         }
+        mCursor = data;
     }
 
     @Override
@@ -122,5 +126,16 @@ public class TaskListActivityFragment extends Fragment implements LoaderManager.
     public void onResume() {
         super.onResume();
         getLoaderManager().restartLoader(LOADER_ID, null, this);
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        if (mCursor != null) {
+            mCursor.moveToPosition(position);
+            String title = mCursor.getString(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_TITLE));
+            String description = mCursor.getString(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_DESCRIPTION));
+            long lat = mCursor.getLong(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_LATITTUDE));
+            long longitude = mCursor.getLong(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_LONGITUDE));
+        }
     }
 }

@@ -20,5 +20,6 @@ limitations under the License.</string>
     <string name="create_task_error_content">Please make sure to fill in the task title and pick a venue.</string>
 
     <string name="delete_task_toast">Task successfully deleted</string>
+    <string name="title_activity_task_detail">TaskDetailActivity</string>
 </resources>
 

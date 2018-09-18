@@ -24,7 +24,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Cursor mCursor;
     private Context mContext;
     private ItemClickListener mClickListener;
-    private long mCreatedTs;
+    private int mPosition;
 
     public RecyclerViewAdapter(Context context) {
         this.mContext = context;
@@ -40,7 +40,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         @Override
         public void onClick(View v) {
             if (mClickListener != null) {
-                mClickListener.onItemClick(v, mCreatedTs);
+                mClickListener.onItemClick(v, mPosition);
             }
         }
     }
@@ -66,7 +66,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public interface ItemClickListener {
-        void onItemClick(View view, long created_ts);
+        void onItemClick(View view, int position);
     }
 
     public void setItemClickListener(RecyclerViewAdapter.ItemClickListener itemClickListener) {
@@ -84,7 +84,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (mCursor != null) {
             mCursor.moveToPosition(position);
             String title = mCursor.getString(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_TITLE));
-            mCreatedTs = mCursor.getLong(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_TS_CREATED));
+            mPosition = position;
             holder.taskTitle.setText(title);
         }
     }
