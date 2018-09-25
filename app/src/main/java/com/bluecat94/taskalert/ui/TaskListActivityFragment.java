@@ -13,13 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bluecat94.taskalert.R;
 import com.bluecat94.taskalert.data.TasksContract;
 import com.bluecat94.taskalert.helper.RecyclerViewAdapter;
-import com.bluecat94.taskalert.helper.TasksAsyncHandler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +30,6 @@ public class TaskListActivityFragment extends Fragment
     private RecyclerViewAdapter mAdapter;
     private static final int LOADER_ID = 0;
     private Cursor mCursor;
-    private static final String TASK_INFO = "TASK_INFO";
 
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
 
