@@ -1,5 +1,6 @@
 package com.bluecat94.taskalert.ui;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ public class TaskListActivityFragment extends Fragment
     private RecyclerViewAdapter mAdapter;
     private static final int LOADER_ID = 0;
     private Cursor mCursor;
+    private static final String TASK_INFO = "TASK_INFO";
 
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
 
@@ -136,6 +138,14 @@ public class TaskListActivityFragment extends Fragment
             String description = mCursor.getString(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_DESCRIPTION));
             long lat = mCursor.getLong(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_LATITTUDE));
             long longitude = mCursor.getLong(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_LONGITUDE));
+
+            Intent intent = new Intent(getActivity().getBaseContext(),
+                    TaskDetailActivity.class);
+            intent.putExtra(TasksContract.TaskEntry.COLUMN_TITLE, title);
+            intent.putExtra(TasksContract.TaskEntry.COLUMN_DESCRIPTION, description);
+            intent.putExtra(TasksContract.TaskEntry.COLUMN_LONGITUDE, longitude);
+            intent.putExtra(TasksContract.TaskEntry.COLUMN_LATITTUDE, lat);
+            getActivity().startActivity(intent);
         }
     }
 }
