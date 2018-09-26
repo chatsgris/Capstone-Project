@@ -5,9 +5,7 @@
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.bluecat94.taskalert.ui.TaskDetailActivityFragment"
-    tools:showIn="@layout/activity_task_detail">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/detail_title_name"

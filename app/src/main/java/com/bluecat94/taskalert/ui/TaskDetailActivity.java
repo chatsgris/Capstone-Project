@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -17,7 +19,7 @@ public class TaskDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_detail);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.activity_task_detail_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -32,10 +34,12 @@ public class TaskDetailActivity extends AppCompatActivity {
         bundle.putString(TasksContract.TaskEntry.COLUMN_DESCRIPTION, description);
         bundle.putLong(TasksContract.TaskEntry.COLUMN_LATITTUDE, lat);
         bundle.putLong(TasksContract.TaskEntry.COLUMN_LONGITUDE, longitude);
-        TaskDetailActivityFragment fragobj = new TaskDetailActivityFragment();
-        fragobj.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, fragobj)
-                .commit();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        TaskDetailActivityFragment fragment = new TaskDetailActivityFragment();
+        fragment.setArguments(bundle);
+        fragmentTransaction.add(R.id.fragment_task_detail_container, fragment);
+        fragmentTransaction.commit();
     }
 }
