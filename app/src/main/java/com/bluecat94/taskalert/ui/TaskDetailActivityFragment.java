@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bluecat94.taskalert.R;
 import com.bluecat94.taskalert.data.TasksContract;
+import com.bluecat94.taskalert.helper.TasksAsyncHandler;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -31,6 +33,7 @@ public class TaskDetailActivityFragment extends Fragment implements OnMapReadyCa
     private String mDescription;
     private double mLong;
     private double mLat;
+    private long mTs;
     private GoogleMap mGoogleMap;
 
     @BindView(R.id.detail_button_delete) Button mButton;
@@ -51,17 +54,37 @@ public class TaskDetailActivityFragment extends Fragment implements OnMapReadyCa
         mDescription = getArguments().getString(TasksContract.TaskEntry.COLUMN_DESCRIPTION);
         mLat = getArguments().getDouble(TasksContract.TaskEntry.COLUMN_LATITTUDE);
         mLong = getArguments().getDouble(TasksContract.TaskEntry.COLUMN_LONGITUDE);
+        mTs = getArguments().getLong(TasksContract.TaskEntry.COLUMN_TS_CREATED);
 
         View view = inflater.inflate(R.layout.fragment_task_detail, container, false);
         ButterKnife.bind(this, view);
         mTitleValue.setText(mTitle);
         mDescriptionValue.setText(mDescription);
 
-
-            // Initialise the MapView
-            mMap.onCreate(null);
-            // Set the map ready callback to receive the GoogleMap object
-            mMap.getMapAsync(this);
+        // Initialise the MapView
+        mMap.onCreate(null);
+        // Set the map ready callback to receive the GoogleMap object
+        mMap.getMapAsync(this);
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TasksAsyncHandler tasksAsyncHandler = new TasksAsyncHandler(getContext().getContentResolver()) {
+                    @Override
+                    protected void onDeleteComplete(int token, Object cookie, int result) {
+                        if (result != 0) {
+                            Toast.makeText(getContext(), getContext().getResources().getString(R.string.delete_task_toast), Toast.LENGTH_LONG).show();
+                        }
+                        getActivity().finish();
+                    }
+                };
+                tasksAsyncHandler.startDelete(
+                        1,
+                        null,
+                        TasksContract.TaskEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(mTs)).build(),
+                        null,
+                        null);
+            }
+        });
 
         return view;
     }
