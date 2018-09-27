@@ -132,8 +132,8 @@ public class TaskListActivityFragment extends Fragment
             mCursor.moveToPosition(position);
             String title = mCursor.getString(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_TITLE));
             String description = mCursor.getString(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_DESCRIPTION));
-            long lat = mCursor.getLong(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_LATITTUDE));
-            long longitude = mCursor.getLong(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_LONGITUDE));
+            double lat = mCursor.getDouble(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_LATITTUDE));
+            double longitude = mCursor.getDouble(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_LONGITUDE));
 
             Intent intent = new Intent(getActivity().getBaseContext(),
                     TaskDetailActivity.class);

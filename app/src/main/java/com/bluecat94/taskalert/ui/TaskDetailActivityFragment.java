@@ -29,8 +29,8 @@ import butterknife.ButterKnife;
 public class TaskDetailActivityFragment extends Fragment implements OnMapReadyCallback {
     private String mTitle;
     private String mDescription;
-    private long mLong;
-    private long mLat;
+    private double mLong;
+    private double mLat;
     private GoogleMap mGoogleMap;
 
     @BindView(R.id.detail_button_delete) Button mButton;
@@ -49,8 +49,8 @@ public class TaskDetailActivityFragment extends Fragment implements OnMapReadyCa
                              Bundle savedInstanceState) {
         mTitle = getArguments().getString(TasksContract.TaskEntry.COLUMN_TITLE);
         mDescription = getArguments().getString(TasksContract.TaskEntry.COLUMN_DESCRIPTION);
-        mLat = getArguments().getLong(TasksContract.TaskEntry.COLUMN_LATITTUDE);
-        mLong = getArguments().getLong(TasksContract.TaskEntry.COLUMN_LONGITUDE);
+        mLat = getArguments().getDouble(TasksContract.TaskEntry.COLUMN_LATITTUDE);
+        mLong = getArguments().getDouble(TasksContract.TaskEntry.COLUMN_LONGITUDE);
 
         View view = inflater.inflate(R.layout.fragment_task_detail, container, false);
         ButterKnife.bind(this, view);
@@ -76,6 +76,7 @@ public class TaskDetailActivityFragment extends Fragment implements OnMapReadyCa
     private void setMapLocation() {
         if (mGoogleMap == null) return;
         // Add a marker for this item and set the camera
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng((double) mLat, (double) mLong)));
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLat, mLong), 16));
+        mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(mLat, mLong)));
     }
 }

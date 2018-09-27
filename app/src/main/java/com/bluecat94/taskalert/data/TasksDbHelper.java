@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class TasksDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "tasks.db";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     public TasksDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -21,8 +21,8 @@ public class TasksDbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_TASKS_TABLE = "CREATE TABLE " + TasksContract.TaskEntry.TABLE_NAME + " (" +
                 TasksContract.TaskEntry.COLUMN_DESCRIPTION + " TEXT, " +
                 TasksContract.TaskEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
-                TasksContract.TaskEntry.COLUMN_LATITTUDE + " FLOAT NOT NULL, " +
-                TasksContract.TaskEntry.COLUMN_LONGITUDE + " FLOAT NOT NULL, " +
+                TasksContract.TaskEntry.COLUMN_LATITTUDE + " REAL NOT NULL, " +
+                TasksContract.TaskEntry.COLUMN_LONGITUDE + " REAL NOT NULL, " +
                 TasksContract.TaskEntry.COLUMN_TS_CREATED + " INTEGER NOT NULL" +
                 "); ";
         db.execSQL(SQL_CREATE_TASKS_TABLE);

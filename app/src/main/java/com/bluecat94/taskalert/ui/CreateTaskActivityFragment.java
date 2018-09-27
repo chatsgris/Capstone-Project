@@ -48,8 +48,8 @@ public class CreateTaskActivityFragment extends Fragment {
     private final static int PLACE_PICKER_REQUEST = 999;
     private String mTitle;
     private String mDescription;
-    private float mLat;
-    private float mLong;
+    private double mLat;
+    private double mLong;
 
     public CreateTaskActivityFragment() {
     }
@@ -88,8 +88,8 @@ public class CreateTaskActivityFragment extends Fragment {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(this.getContext(), data);
-                mLat = (float) place.getLatLng().latitude;
-                mLong = (float) place.getLatLng().longitude;
+                mLat = place.getLatLng().latitude;
+                mLong = place.getLatLng().longitude;
                 String toastMsg = String.format("Venue: %s, %s", String.valueOf(mLat), String.valueOf(mLong));
                 Toast.makeText(this.getContext(), toastMsg, Toast.LENGTH_LONG).show();
             }
