@@ -1,10 +1,13 @@
 package com.bluecat94.taskalert.ui;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,17 +16,29 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.bluecat94.taskalert.R;
+import com.bluecat94.taskalert.data.TasksContract;
 import com.bluecat94.taskalert.helper.Geofencing;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.tasks.Task;
 
-public class TaskListActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
+import java.util.ArrayList;
+import java.util.List;
+
+public class TaskListActivity extends AppCompatActivity implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LoaderManager.LoaderCallbacks<Cursor> {
     private Geofencing mGeofencing;
     private GoogleApiClient mClient;
 
     public static final String TAG = TaskListActivity.class.getSimpleName();
+    private static final int LOADER_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,5 +107,70 @@ public class TaskListActivity extends AppCompatActivity implements GoogleApiClie
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.e(TAG, "API Client Connection Failed!");
+    }
+
+    public void refreshPlacesData() {
+        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+    }
+
+    @Override
+    public  android.support.v4.content.Loader<Cursor> onCreateLoader(int id, final Bundle loaderArgs) {
+        return new AsyncTaskLoader<Cursor>(this) {
+            Cursor c = null;
+
+            @Override
+            protected void onStartLoading() {
+                if (c != null) {
+                    deliverResult(c);
+                } else {
+                    forceLoad();
+                }
+            }
+
+            @Override
+            public Cursor loadInBackground() {
+                try {
+                    return getContext().getContentResolver().query(TasksContract.TaskEntry.CONTENT_URI,
+                            null,
+                            null,
+                            null,
+                            null);
+                } catch (Exception e) {
+                    Log.e(TaskListActivityFragment.class.getSimpleName(), "Failed to asynchronously load data.");
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            public void deliverResult(Cursor data) {
+                c = data;
+                super.deliverResult(data);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
+        if (data == null || data.getCount() == 0) return;
+        List<Double> lats = new ArrayList<>();
+        List<Double> longs = new ArrayList<>();
+        while (data.moveToNext()) {
+            lats.add(data.getDouble(data.getColumnIndex(TasksContract.TaskEntry.COLUMN_LATITTUDE)));
+            longs.add(data.getDouble(data.getColumnIndex(TasksContract.TaskEntry.COLUMN_LONGITUDE)));
+        }
+        PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mClient,
+                guids.toArray(new String[guids.size()]));
+        placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
+            @Override
+            public void onResult(@NonNull PlaceBuffer places) {
+                mAdapter.swapPlaces(places);
+                mGeofencing.updateGeofencesList(places);
+                if (mIsEnabled) mGeofencing.registerAllGeofences();
+            }
+        });
+    }
+
+    @Override
+    public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
     }
 }
