@@ -33,6 +33,7 @@ public class TaskListActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LoaderManager.LoaderCallbacks<Cursor> {
+
     private Geofencing mGeofencing;
     private GoogleApiClient mClient;
 
@@ -55,6 +56,7 @@ public class TaskListActivity extends AppCompatActivity implements
             }
         });
 
+        mGeofencing = new Geofencing(this, mClient);
         mGeofencing.registerAllGeofences();
         mClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -63,7 +65,6 @@ public class TaskListActivity extends AppCompatActivity implements
                 .addApi(Places.GEO_DATA_API)
                 .enableAutoManage(this, this)
                 .build();
-        mGeofencing = new Geofencing(this, mClient);
     }
 
     @Override

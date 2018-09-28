@@ -24,7 +24,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         int type = geofencingEvent.getGeofenceTransition();
         if (type == Geofence.GEOFENCE_TRANSITION_ENTER) {
-            //TODO 1: start notification
+            sendNotification(context, type);//TODO 1: start notification
         } else {
             Log.e(TAG, String.format("Unknown transition type: %d", type));
         }
