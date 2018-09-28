@@ -50,6 +50,7 @@ public class CreateTaskActivityFragment extends Fragment {
     private String mDescription;
     private double mLat;
     private double mLong;
+    private String mPlaceId;
 
     public CreateTaskActivityFragment() {
     }
@@ -90,6 +91,7 @@ public class CreateTaskActivityFragment extends Fragment {
                 Place place = PlacePicker.getPlace(this.getContext(), data);
                 mLat = place.getLatLng().latitude;
                 mLong = place.getLatLng().longitude;
+                mPlaceId = place.getId();
                 String toastMsg = String.format("Venue: %s, %s", String.valueOf(mLat), String.valueOf(mLong));
                 Toast.makeText(this.getContext(), toastMsg, Toast.LENGTH_LONG).show();
             }
@@ -119,6 +121,7 @@ public class CreateTaskActivityFragment extends Fragment {
             cv.put(TasksContract.TaskEntry.COLUMN_DESCRIPTION, mDescription);
             cv.put(TasksContract.TaskEntry.COLUMN_LATITTUDE, mLat);
             cv.put(TasksContract.TaskEntry.COLUMN_LONGITUDE, mLong);
+            cv.put(TasksContract.TaskEntry.COLUMN_PLACE_ID, mPlaceId);
 
             TasksAsyncHandler tasksAsyncHandler = new TasksAsyncHandler(getContext().getContentResolver()) {
                 @Override

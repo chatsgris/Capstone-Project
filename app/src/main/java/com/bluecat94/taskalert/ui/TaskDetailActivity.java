@@ -29,6 +29,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         double longitude = intent.getDoubleExtra(TasksContract.TaskEntry.COLUMN_LONGITUDE, 0);
         double lat = intent.getDoubleExtra(TasksContract.TaskEntry.COLUMN_LATITTUDE, 0);
         long createdTs = intent.getLongExtra(TasksContract.TaskEntry.COLUMN_TS_CREATED, 0);
+        String placeId = intent.getStringExtra(TasksContract.TaskEntry.COLUMN_PLACE_ID);
 
         Bundle bundle = new Bundle();
         bundle.putString(TasksContract.TaskEntry.COLUMN_TITLE, title);
@@ -36,6 +37,7 @@ public class TaskDetailActivity extends AppCompatActivity {
         bundle.putDouble(TasksContract.TaskEntry.COLUMN_LATITTUDE, lat);
         bundle.putDouble(TasksContract.TaskEntry.COLUMN_LONGITUDE, longitude);
         bundle.putLong(TasksContract.TaskEntry.COLUMN_TS_CREATED, createdTs);
+        bundle.putString(TasksContract.TaskEntry.COLUMN_PLACE_ID, placeId);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

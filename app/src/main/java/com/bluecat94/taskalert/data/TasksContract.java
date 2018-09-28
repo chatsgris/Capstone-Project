@@ -21,6 +21,7 @@ public class TasksContract {
         public static final String COLUMN_TITLE = "taskData";
         public static final String COLUMN_DESCRIPTION = "taskDescription";
         public static final String COLUMN_LATITTUDE = "latitude";
+        public static final String COLUMN_PLACE_ID = "placeId";
         public static final String COLUMN_LONGITUDE = "longitude";
         public static final String COLUMN_TS_CREATED = "createdTimestamp";
     }

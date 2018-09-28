@@ -135,6 +135,7 @@ public class TaskListActivityFragment extends Fragment
             double lat = mCursor.getDouble(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_LATITTUDE));
             double longitude = mCursor.getDouble(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_LONGITUDE));
             long createdTs = mCursor.getLong(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_TS_CREATED));
+            String placeId = mCursor.getString(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_PLACE_ID));
 
             Intent intent = new Intent(getActivity().getBaseContext(),
                     TaskDetailActivity.class);
@@ -143,6 +144,7 @@ public class TaskListActivityFragment extends Fragment
             intent.putExtra(TasksContract.TaskEntry.COLUMN_LONGITUDE, longitude);
             intent.putExtra(TasksContract.TaskEntry.COLUMN_LATITTUDE, lat);
             intent.putExtra(TasksContract.TaskEntry.COLUMN_TS_CREATED, createdTs);
+            intent.putExtra(TasksContract.TaskEntry.COLUMN_PLACE_ID, placeId);
             getActivity().startActivity(intent);
         }
     }

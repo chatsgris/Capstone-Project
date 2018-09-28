@@ -25,7 +25,6 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,25 +151,28 @@ public class TaskListActivity extends AppCompatActivity implements
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
         if (data == null || data.getCount() == 0) return;
-        List<Double> lats = new ArrayList<>();
-        List<Double> longs = new ArrayList<>();
+        List<String> placeIds = new ArrayList<>();
         while (data.moveToNext()) {
-            lats.add(data.getDouble(data.getColumnIndex(TasksContract.TaskEntry.COLUMN_LATITTUDE)));
-            longs.add(data.getDouble(data.getColumnIndex(TasksContract.TaskEntry.COLUMN_LONGITUDE)));
+            placeIds.add(data.getString(data.getColumnIndex(TasksContract.TaskEntry.COLUMN_PLACE_ID)));
         }
         PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mClient,
-                guids.toArray(new String[guids.size()]));
+                placeIds.toArray(new String[placeIds.size()]));
         placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
             @Override
             public void onResult(@NonNull PlaceBuffer places) {
-                mAdapter.swapPlaces(places);
                 mGeofencing.updateGeofencesList(places);
-                if (mIsEnabled) mGeofencing.registerAllGeofences();
+                mGeofencing.registerAllGeofences();
             }
         });
     }
 
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshPlacesData();
     }
 }
