@@ -21,5 +21,8 @@ limitations under the License.</string>
 
     <string name="delete_task_toast">Task successfully deleted</string>
     <string name="title_activity_task_detail">TaskDetailActivity</string>
+
+    <string name="channel_name">Geofencing</string>
+    <string name="channel_description">Enable notifications on geofencing updates</string>
 </resources>
 

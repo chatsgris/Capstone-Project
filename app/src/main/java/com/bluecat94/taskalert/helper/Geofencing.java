@@ -44,7 +44,7 @@ public class Geofencing implements ResultCallback {
         // Check that the API client is connected and that the list has Geofences in it
         if (mGoogleApiClient == null || !mGoogleApiClient.isConnected() ||
                 mGeofenceList == null || mGeofenceList.size() == 0) {
-            return;
+            return; //TODO: check geofence not added
         }
         try {
             LocationServices.GeofencingApi.addGeofences(

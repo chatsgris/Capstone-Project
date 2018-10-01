@@ -134,7 +134,7 @@ public class TaskListActivity extends AppCompatActivity implements
                             null,
                             null,
                             null,
-                            null);
+                            TasksContract.TaskEntry.COLUMN_TS_CREATED);
                 } catch (Exception e) {
                     Log.e(TaskListActivityFragment.class.getSimpleName(), "Failed to asynchronously load data.");
                     e.printStackTrace();
@@ -153,10 +153,12 @@ public class TaskListActivity extends AppCompatActivity implements
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
         if (data == null || data.getCount() == 0) return;
         List<String> placeIds = new ArrayList<>();
+        data.moveToFirst();
+        placeIds.add(data.getString(data.getColumnIndex(TasksContract.TaskEntry.COLUMN_PLACE_ID)));
         while (data.moveToNext()) {
             placeIds.add(data.getString(data.getColumnIndex(TasksContract.TaskEntry.COLUMN_PLACE_ID)));
         }
-        PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mClient,
+        final PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mClient,
                 placeIds.toArray(new String[placeIds.size()]));
         placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
             @Override
