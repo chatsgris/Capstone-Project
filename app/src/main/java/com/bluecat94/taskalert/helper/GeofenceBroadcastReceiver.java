@@ -55,7 +55,8 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                         .setContentTitle("TaskAlert!")
                         .setContentText("Remember to do your task!")
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setSmallIcon(R.drawable.ic_launcher_foreground);
                 Notification notification = builder.build();
                 notificationManager.notify(NOTIFICATION_ID, notification);
             }
