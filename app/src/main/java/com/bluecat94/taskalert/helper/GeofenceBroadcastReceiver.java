@@ -3,9 +3,11 @@ package com.bluecat94.taskalert.helper;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -30,13 +32,15 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         int type = geofencingEvent.getGeofenceTransition();
         if (type == Geofence.GEOFENCE_TRANSITION_ENTER) {
-            sendNotification(context, type);
+            double lat = geofencingEvent.getTriggeringLocation().getLatitude();
+            double longitude = geofencingEvent.getTriggeringLocation().getLongitude();
+            sendNotification(context, type, lat, longitude);
         } else {
             Log.e(TAG, String.format("Unknown transition type: %d", type));
         }
     }
 
-    private void sendNotification(Context context, int type) {
+    private void sendNotification(Context context, int type, double lat, double longitude) {
         if (type == Geofence.GEOFENCE_TRANSITION_ENTER) {
             NotificationManager notificationManager = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -52,12 +56,22 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                 // or other notification behaviors after this
                 notificationManager.createNotificationChannel(channel);
             } else {
+                Uri mapIntentUri = Uri.parse(String.format("google.navigation:q=%s,%s", String.valueOf(lat), String.valueOf(longitude)));
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                mapIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                PendingIntent intent = PendingIntent.getActivity(context, 0,
+                        mapIntent, 0);
+
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                         .setContentTitle("TaskAlert!")
-                        .setContentText("Remember to do your task!")
+                        .setContentText("You are near a Task Venue. Click for map details!")
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                        .setSmallIcon(R.drawable.ic_launcher_foreground);
+                        .setSmallIcon(R.drawable.ic_launcher_foreground)
+                        .setContentIntent(intent);
                 Notification notification = builder.build();
+                notification.flags |= Notification.FLAG_AUTO_CANCEL;
                 notificationManager.notify(NOTIFICATION_ID, notification);
             }
         } else {
