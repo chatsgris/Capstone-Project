@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/detail_title_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:paddingTop="12dp"
+        android:text="Title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/detail_description_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:paddingTop="12dp"
+        android:text="Description"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@id/detail_title_value" />
+
+    <TextView
+        android:id="@+id/detail_description_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:gravity="top"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/detail_title_name"
+        app:layout_constraintTop_toBottomOf="@id/detail_description_name"
+        tools:text="More than 10 million residents in North and South Carolina and Virginia are under a storm watch or warning"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/detail_title_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@id/detail_title_name"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        tools:text="Buy food from supermarket"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/detail_venue_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:paddingTop="12dp"
+        android:text="Venue"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@id/detail_description_value" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/detail_map"
+        android:layout_width="450dp"
+        android:layout_height="450dp"
+        android:paddingTop="12dp"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@id/detail_venue_name"
+        map:cameraZoom="13"
+        map:liteMode="true"
+        map:mapType="normal"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="75dp"
+        android:layout_marginEnd="75dp"/>
+
+    <Button
+        android:id="@+id/detail_button_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="28dp"
+        android:text="Delete"
+        app:layout_constraintTop_toBottomOf="@id/detail_map"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.15" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.85" />
+
+</android.support.constraint.ConstraintLayout>
