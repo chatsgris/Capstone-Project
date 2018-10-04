@@ -86,6 +86,16 @@ public class TaskDetailActivityFragment extends Fragment implements OnMapReadyCa
             }
         });
 
+        if (this.getResources().getBoolean(R.bool.is_two_pane) && mTs == 12345) {
+            mButton.setVisibility(View.INVISIBLE);
+            mDescriptionName.setVisibility(View.INVISIBLE);
+            mDescriptionValue.setVisibility(View.INVISIBLE);
+            mTitleName.setVisibility(View.INVISIBLE);
+            mTitleValue.setVisibility(View.INVISIBLE);
+            mVenueName.setVisibility(View.INVISIBLE);
+            mMap.setVisibility(View.INVISIBLE);
+        }
+
         return view;
     }
 

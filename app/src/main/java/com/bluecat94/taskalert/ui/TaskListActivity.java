@@ -210,7 +210,7 @@ public class TaskListActivity extends AppCompatActivity implements
         mFragment.setArguments(bundle);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .add(R.id.detail_container, mFragment)
+                .replace(R.id.detail_container, mFragment)
                 .commit();
     }
 }
