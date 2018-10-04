@@ -1,5 +1,6 @@
 package com.bluecat94.taskalert.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.design.widget.FloatingActionButton;
@@ -31,6 +32,7 @@ public class TaskListActivityFragment extends Fragment
     private RecyclerViewAdapter mAdapter;
     private static final int LOADER_ID = 0;
     private Cursor mCursor;
+    OnDataPass dataPasser;
 
     @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
 
@@ -138,15 +140,40 @@ public class TaskListActivityFragment extends Fragment
             long createdTs = mCursor.getLong(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_TS_CREATED));
             String placeId = mCursor.getString(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_PLACE_ID));
 
-            Intent intent = new Intent(getActivity().getBaseContext(),
-                    TaskDetailActivity.class);
-            intent.putExtra(TasksContract.TaskEntry.COLUMN_TITLE, title);
-            intent.putExtra(TasksContract.TaskEntry.COLUMN_DESCRIPTION, description);
-            intent.putExtra(TasksContract.TaskEntry.COLUMN_LONGITUDE, longitude);
-            intent.putExtra(TasksContract.TaskEntry.COLUMN_LATITTUDE, lat);
-            intent.putExtra(TasksContract.TaskEntry.COLUMN_TS_CREATED, createdTs);
-            intent.putExtra(TasksContract.TaskEntry.COLUMN_PLACE_ID, placeId);
-            getActivity().startActivity(intent);
+            if (this.getResources().getBoolean(R.bool.is_two_pane)) {
+                Bundle bundle = new Bundle();
+                bundle.putString(TasksContract.TaskEntry.COLUMN_TITLE, title);
+                bundle.putString(TasksContract.TaskEntry.COLUMN_DESCRIPTION, description);
+                bundle.putDouble(TasksContract.TaskEntry.COLUMN_LONGITUDE, longitude);
+                bundle.putDouble(TasksContract.TaskEntry.COLUMN_LATITTUDE, lat);
+                bundle.putLong(TasksContract.TaskEntry.COLUMN_TS_CREATED, createdTs);
+                bundle.putString(TasksContract.TaskEntry.COLUMN_PLACE_ID, placeId);
+                passData(bundle);                                                                                                         ;
+            } else {
+                Intent intent = new Intent(getActivity().getBaseContext(),
+                        TaskDetailActivity.class);
+                intent.putExtra(TasksContract.TaskEntry.COLUMN_TITLE, title);
+                intent.putExtra(TasksContract.TaskEntry.COLUMN_DESCRIPTION, description);
+                intent.putExtra(TasksContract.TaskEntry.COLUMN_LONGITUDE, longitude);
+                intent.putExtra(TasksContract.TaskEntry.COLUMN_LATITTUDE, lat);
+                intent.putExtra(TasksContract.TaskEntry.COLUMN_TS_CREATED, createdTs);
+                intent.putExtra(TasksContract.TaskEntry.COLUMN_PLACE_ID, placeId);
+                getActivity().startActivity(intent);
+            }
         }
+    }
+
+    public interface OnDataPass {
+        public void onDataPass(Bundle bundle);
+    }
+
+    public void passData(Bundle bundle) {
+        dataPasser.onDataPass(bundle);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        dataPasser = (OnDataPass) context;
     }
 }

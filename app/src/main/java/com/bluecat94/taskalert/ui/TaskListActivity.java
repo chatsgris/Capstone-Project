@@ -39,20 +39,15 @@ import butterknife.ButterKnife;
 public class TaskListActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>,
+        TaskListActivityFragment.OnDataPass {
 
     private Geofencing mGeofencing;
     private GoogleApiClient mClient;
-    private LinearLayoutManager mLayoutManager;
-    private RecyclerViewAdapter mAdapter;
-    private Cursor mCursor;
-    private boolean mTwoPane;
+    private TaskDetailActivityFragment mFragment;
 
     public static final String TAG = TaskListActivity.class.getSimpleName();
     private static final int LOADER_ID = 1;
-    private static final int TWO_LOADER_ID = 2;
-
-    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +75,20 @@ public class TaskListActivity extends AppCompatActivity implements
         mGeofencing = new Geofencing(this, mClient);
         mGeofencing.registerAllGeofences();
 
-        if (findViewById(R.id.master_list_fragment) != null) {
-            mTwoPane = true;
+        if (getResources().getBoolean(R.bool.is_two_pane)) {
+            mFragment = new TaskDetailActivityFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString(TasksContract.TaskEntry.COLUMN_DESCRIPTION, "descrip");
+            bundle.putString(TasksContract.TaskEntry.COLUMN_TITLE, "title");
+            bundle.putString(TasksContract.TaskEntry.COLUMN_PLACE_ID, "123");
+            bundle.putDouble(TasksContract.TaskEntry.COLUMN_LATITTUDE, 44.44);
+            bundle.putDouble(TasksContract.TaskEntry.COLUMN_LONGITUDE, 44.44);
+            bundle.putLong(TasksContract.TaskEntry.COLUMN_TS_CREATED, 12345);
+            mFragment.setArguments(bundle);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .add(R.id.detail_container, mFragment)
+                    .commit();
         }
     }
 
@@ -185,23 +192,25 @@ public class TaskListActivity extends AppCompatActivity implements
                 mGeofencing.registerAllGeofences();
             }
         });
-
-        if (mAdapter != null) {
-            mAdapter.swapCursor(data);
-        }
-        mCursor = data;
     }
 
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
-        if (mAdapter != null) {
-            mAdapter.swapCursor(null);
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         refreshPlacesData();
+    }
+
+    @Override
+    public void onDataPass(Bundle bundle) {
+        mFragment = new TaskDetailActivityFragment();
+        mFragment.setArguments(bundle);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .add(R.id.detail_container, mFragment)
+                .commit();
     }
 }
