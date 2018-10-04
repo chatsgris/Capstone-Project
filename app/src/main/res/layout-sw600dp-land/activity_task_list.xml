@@ -36,13 +36,10 @@
         android:layout_height="match_parent"
         android:layout_marginTop="62dp">
 
-        <fragment
-            android:id="@+id/master_list_fragment"
-            android:name="com.bluecat94.taskalert.ui.TaskListActivityFragment"
+        <FrameLayout
+            android:id="@+id/master_container"
             android:layout_width="400dp"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:layout="@layout/fragment_task_list" />
+            android:layout_height="match_parent" />
 
         <!-- A small divider -->
         <View
@@ -54,8 +51,7 @@
             android:id="@+id/detail_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/white" />
+            android:layout_gravity="center_vertical" />
 
     </LinearLayout>
 

@@ -2,6 +2,7 @@ package com.bluecat94.taskalert.ui;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bluecat94.taskalert.R;
@@ -41,6 +43,10 @@ import static android.app.Activity.RESULT_OK;
  */
 public class CreateTaskActivityFragment extends Fragment {
     @BindView(R.id.task_title_value) EditText taskTitleEt;
+    @BindView(R.id.task_title_name) TextView taskTitleName;
+    @BindView(R.id.task_description_name) TextView descriptionName;
+    @BindView(R.id.task_venue_name) TextView venueName;
+    @BindView(R.id.text_place_picker) TextView placePickerText;
     @BindView(R.id.task_description_value) EditText taskDescriptionEt;
     @BindView(R.id.image_place_picker) ImageView placePickerImage;
     @BindView(R.id.button_place_picker) Button placePickerButton;
@@ -51,6 +57,7 @@ public class CreateTaskActivityFragment extends Fragment {
     private double mLat;
     private double mLong;
     private String mPlaceId;
+    OnTaskCreated taskCreatedSignal;
 
     public CreateTaskActivityFragment() {
     }
@@ -132,7 +139,34 @@ public class CreateTaskActivityFragment extends Fragment {
                 }
             };
             tasksAsyncHandler.startInsert(1, null, TasksContract.TaskEntry.CONTENT_URI, cv);
-            getActivity().finish();
+
+            if (!this.getResources().getBoolean(R.bool.is_two_pane)) {
+                getActivity().finish();
+            } else {
+                taskDescriptionEt.setVisibility(View.INVISIBLE);
+                descriptionName.setVisibility(View.INVISIBLE);
+                taskTitleEt.setVisibility(View.INVISIBLE);
+                taskTitleName.setVisibility(View.INVISIBLE);
+                venueName.setVisibility(View.INVISIBLE);
+                placePickerImage.setVisibility(View.INVISIBLE);
+                placePickerButton.setVisibility(View.INVISIBLE);
+                placePickerText.setVisibility(View.INVISIBLE);
+                taskCreated("TASK_CREATED");
+            }
         }
+    }
+
+    public interface OnTaskCreated {
+        public void onTaskCreated(String string);
+    }
+
+    public void taskCreated(String string) {
+        taskCreatedSignal.onTaskCreated(string);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        taskCreatedSignal = (OnTaskCreated) context;
     }
 }

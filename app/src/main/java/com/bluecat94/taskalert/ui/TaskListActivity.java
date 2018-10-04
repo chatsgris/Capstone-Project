@@ -40,7 +40,8 @@ public class TaskListActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LoaderManager.LoaderCallbacks<Cursor>,
-        TaskListActivityFragment.OnDataPass {
+        TaskListActivityFragment.OnDataPass,
+        CreateTaskActivityFragment.OnTaskCreated {
 
     private Geofencing mGeofencing;
     private GoogleApiClient mClient;
@@ -60,8 +61,16 @@ public class TaskListActivity extends AppCompatActivity implements
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), CreateTaskActivity.class);
-                view.getContext().startActivity(intent);
+                if (!getResources().getBoolean(R.bool.is_two_pane)) {
+                    Intent intent = new Intent(view.getContext(), CreateTaskActivity.class);
+                    view.getContext().startActivity(intent);
+                } else {
+                    CreateTaskActivityFragment fragment = new CreateTaskActivityFragment();
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.detail_container, fragment)
+                            .commit();
+                }
             }
         });
 
@@ -89,6 +98,10 @@ public class TaskListActivity extends AppCompatActivity implements
             fragmentManager.beginTransaction()
                     .add(R.id.detail_container, mFragment)
                     .commit();
+            TaskListActivityFragment fragment = new TaskListActivityFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.master_container, fragment)
+                    .commit();
         }
     }
 
@@ -109,7 +122,7 @@ public class TaskListActivity extends AppCompatActivity implements
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.action_settings:
-                return true;
+                return true; //TODO: insert accessibility support
             case R.id.action_about:
                 Intent intent = new Intent(this, AboutActivity.class);
                 this.startActivity(intent);
@@ -212,5 +225,15 @@ public class TaskListActivity extends AppCompatActivity implements
         fragmentManager.beginTransaction()
                 .replace(R.id.detail_container, mFragment)
                 .commit();
+    }
+
+    @Override
+    public void onTaskCreated(String string) {
+        if (string.equals("TASK_CREATED")) {
+            TaskListActivityFragment fragment = new TaskListActivityFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.master_container, fragment)
+                    .commit();
+        }
     }
 }

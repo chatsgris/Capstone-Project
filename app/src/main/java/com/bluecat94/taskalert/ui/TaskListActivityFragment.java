@@ -26,8 +26,9 @@ import butterknife.ButterKnife;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class TaskListActivityFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor>, RecyclerViewAdapter.ItemClickListener {
+public class TaskListActivityFragment extends Fragment implements
+        LoaderManager.LoaderCallbacks<Cursor>,
+        RecyclerViewAdapter.ItemClickListener {
     private LinearLayoutManager mLayoutManager;
     private RecyclerViewAdapter mAdapter;
     private static final int LOADER_ID = 0;
