@@ -13,7 +13,7 @@ import android.view.View;
 import com.bluecat94.taskalert.R;
 import com.bluecat94.taskalert.data.TasksContract;
 
-public class TaskDetailActivity extends AppCompatActivity {
+public class TaskDetailActivity extends AppCompatActivity implements TaskDetailActivityFragment.OnTaskDeleted {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,5 +45,9 @@ public class TaskDetailActivity extends AppCompatActivity {
         fragment.setArguments(bundle);
         fragmentTransaction.add(R.id.fragment_task_detail_container, fragment);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onTaskDeleted(String string) {
     }
 }

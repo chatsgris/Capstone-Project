@@ -30,6 +30,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.tasks.Task;
 
 import java.util.Date;
 
@@ -65,6 +66,12 @@ public class CreateTaskActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            mLat = savedInstanceState.getDouble(TasksContract.TaskEntry.COLUMN_LATITTUDE);
+            mLong = savedInstanceState.getDouble(TasksContract.TaskEntry.COLUMN_LONGITUDE);
+            mPlaceId = savedInstanceState.getString(TasksContract.TaskEntry.COLUMN_PLACE_ID);
+        }
+
         View view = inflater.inflate(R.layout.fragment_create_task, container, false);
         ButterKnife.bind(this, view);
 
@@ -168,5 +175,13 @@ public class CreateTaskActivityFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         taskCreatedSignal = (OnTaskCreated) context;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putDouble(TasksContract.TaskEntry.COLUMN_LONGITUDE, mLong);
+        outState.putDouble(TasksContract.TaskEntry.COLUMN_LATITTUDE, mLat);
+        outState.putString(TasksContract.TaskEntry.COLUMN_PLACE_ID, mPlaceId);
     }
 }

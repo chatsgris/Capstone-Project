@@ -13,7 +13,7 @@ import com.bluecat94.taskalert.R;
 
 import java.util.List;
 
-public class CreateTaskActivity extends AppCompatActivity {
+public class CreateTaskActivity extends AppCompatActivity implements CreateTaskActivityFragment.OnTaskCreated {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,4 +37,6 @@ public class CreateTaskActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onTaskCreated(String string) {}
 }
