@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +21,7 @@ import android.view.MenuItem;
 import com.bluecat94.taskalert.R;
 import com.bluecat94.taskalert.data.TasksContract;
 import com.bluecat94.taskalert.helper.Geofencing;
+import com.bluecat94.taskalert.helper.RecyclerViewAdapter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -29,6 +33,9 @@ import com.google.android.gms.location.places.Places;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class TaskListActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -36,9 +43,16 @@ public class TaskListActivity extends AppCompatActivity implements
 
     private Geofencing mGeofencing;
     private GoogleApiClient mClient;
+    private LinearLayoutManager mLayoutManager;
+    private RecyclerViewAdapter mAdapter;
+    private Cursor mCursor;
+    private boolean mTwoPane;
 
     public static final String TAG = TaskListActivity.class.getSimpleName();
     private static final int LOADER_ID = 1;
+    private static final int TWO_LOADER_ID = 2;
+
+    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +79,10 @@ public class TaskListActivity extends AppCompatActivity implements
                 .build();
         mGeofencing = new Geofencing(this, mClient);
         mGeofencing.registerAllGeofences();
+
+        if (findViewById(R.id.master_list_fragment) != null) {
+            mTwoPane = true;
+        }
     }
 
     @Override
@@ -167,10 +185,18 @@ public class TaskListActivity extends AppCompatActivity implements
                 mGeofencing.registerAllGeofences();
             }
         });
+
+        if (mAdapter != null) {
+            mAdapter.swapCursor(data);
+        }
+        mCursor = data;
     }
 
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
+        if (mAdapter != null) {
+            mAdapter.swapCursor(null);
+        }
     }
 
     @Override
