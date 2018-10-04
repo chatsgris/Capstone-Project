@@ -1,5 +1,6 @@
 package com.bluecat94.taskalert.ui;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class TaskDetailActivityFragment extends Fragment implements OnMapReadyCa
     private double mLat;
     private long mTs;
     private GoogleMap mGoogleMap;
+    OnTaskDeleted taskDeletedSignal;
 
     @BindView(R.id.detail_button_delete) Button mButton;
     @BindView(R.id.detail_description_name) TextView mDescriptionName;
@@ -74,7 +76,19 @@ public class TaskDetailActivityFragment extends Fragment implements OnMapReadyCa
                         if (result != 0) {
                             Toast.makeText(getContext(), getContext().getResources().getString(R.string.delete_task_toast), Toast.LENGTH_LONG).show();
                         }
-                        getActivity().finish();
+
+                        if (!getContext().getResources().getBoolean(R.bool.is_two_pane)) {
+                            getActivity().finish();
+                        } else {
+                            mButton.setVisibility(View.INVISIBLE);
+                            mDescriptionName.setVisibility(View.INVISIBLE);
+                            mDescriptionValue.setVisibility(View.INVISIBLE);
+                            mTitleName.setVisibility(View.INVISIBLE);
+                            mTitleValue.setVisibility(View.INVISIBLE);
+                            mVenueName.setVisibility(View.INVISIBLE);
+                            mMap.setVisibility(View.INVISIBLE);
+                            taskDeleted("TASK_DELETED");
+                        }
                     }
                 };
                 tasksAsyncHandler.startDelete(
@@ -111,5 +125,19 @@ public class TaskDetailActivityFragment extends Fragment implements OnMapReadyCa
         // Add a marker for this item and set the camera
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLat, mLong), 16));
         mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(mLat, mLong)));
+    }
+
+    public interface OnTaskDeleted {
+        public void onTaskDeleted(String string);
+    }
+
+    public void taskDeleted(String string) {
+        taskDeletedSignal.onTaskDeleted(string);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        taskDeletedSignal = (OnTaskDeleted) context;
     }
 }

@@ -41,7 +41,8 @@ public class TaskListActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         LoaderManager.LoaderCallbacks<Cursor>,
         TaskListActivityFragment.OnDataPass,
-        CreateTaskActivityFragment.OnTaskCreated {
+        CreateTaskActivityFragment.OnTaskCreated,
+        TaskDetailActivityFragment.OnTaskDeleted {
 
     private Geofencing mGeofencing;
     private GoogleApiClient mClient;
@@ -230,6 +231,16 @@ public class TaskListActivity extends AppCompatActivity implements
     @Override
     public void onTaskCreated(String string) {
         if (string.equals("TASK_CREATED")) {
+            TaskListActivityFragment fragment = new TaskListActivityFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.master_container, fragment)
+                    .commit();
+        }
+    }
+
+    @Override
+    public void onTaskDeleted(String string) {
+        if (string.equals("TASK_DELETED")) {
             TaskListActivityFragment fragment = new TaskListActivityFragment();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.master_container, fragment)
