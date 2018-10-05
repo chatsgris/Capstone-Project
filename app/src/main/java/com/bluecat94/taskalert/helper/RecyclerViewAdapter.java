@@ -24,7 +24,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Cursor mCursor;
     private Context mContext;
     private ItemClickListener mClickListener;
-    private int mPosition;
 
     public RecyclerViewAdapter(Context context) {
         this.mContext = context;
@@ -41,7 +40,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         @Override
         public void onClick(View v) {
             if (mClickListener != null) {
-                mClickListener.onItemClick(v, mPosition);
+                int position = getAdapterPosition();
+                mClickListener.onItemClick(v, position);
             }
         }
     }
@@ -85,7 +85,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (mCursor != null) {
             mCursor.moveToPosition(position);
             String title = mCursor.getString(mCursor.getColumnIndex(TasksContract.TaskEntry.COLUMN_TITLE));
-            mPosition = position;
             holder.taskTitle.setText(title);
         }
     }

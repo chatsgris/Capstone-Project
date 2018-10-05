@@ -1,17 +1,18 @@
 package com.bluecat94.taskalert.ui;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +22,7 @@ import android.view.MenuItem;
 import com.bluecat94.taskalert.R;
 import com.bluecat94.taskalert.data.TasksContract;
 import com.bluecat94.taskalert.helper.Geofencing;
-import com.bluecat94.taskalert.helper.RecyclerViewAdapter;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -33,8 +34,6 @@ import com.google.android.gms.location.places.Places;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class TaskListActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -54,6 +53,11 @@ public class TaskListActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (ActivityCompat.checkSelfPermission(TaskListActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(TaskListActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(TaskListActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+
         setContentView(R.layout.activity_task_list);
         Toolbar toolbar = findViewById(R.id.activity_task_list_toolbar);
         setSupportActionBar(toolbar);
@@ -134,6 +138,9 @@ public class TaskListActivity extends AppCompatActivity implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(TaskListActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(TaskListActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(TaskListActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
         refreshPlacesData();
         Log.i(TAG, "API Client Connection Successful!");
     }
@@ -215,6 +222,9 @@ public class TaskListActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        if (ActivityCompat.checkSelfPermission(TaskListActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(TaskListActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(TaskListActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
         refreshPlacesData();
     }
 

@@ -160,6 +160,8 @@ public class CreateTaskActivityFragment extends Fragment {
                 placePickerText.setVisibility(View.INVISIBLE);
                 taskCreated("TASK_CREATED");
             }
+
+            TaskAlertWidget.sendRefreshBroadcast(this.getContext());
         }
     }
 
