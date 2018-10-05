@@ -26,5 +26,7 @@ limitations under the License.</string>
     <string name="channel_description">Enable notifications on geofencing updates</string>
     <string name="appwidget_text">Your Tasks</string>
     <string name="add_widget">Add widget</string>
+
+    <string name="place_picker_content_description">Click this image to pick the venue of your task.</string>
 </resources>
 
