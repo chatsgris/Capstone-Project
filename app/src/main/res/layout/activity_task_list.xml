@@ -29,7 +29,8 @@
         app:srcCompat="@drawable/baseline_add_white_24"
         android:background="@drawable/ripple"
         android:elevation="6dp"
-        app:pressedTranslationZ="12dp"/>
+        app:pressedTranslationZ="12dp"
+        android:contentDescription="@string/fab_content_description"/>
 
     <include layout="@layout/content_task_list" />
 

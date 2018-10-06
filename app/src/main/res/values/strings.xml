@@ -28,6 +28,7 @@ limitations under the License.</string>
     <string name="add_widget">Add widget</string>
 
     <string name="place_picker_content_description">Click this image to pick the venue of your task.</string>
+    <string name="fab_content_description">Click this button to create a new task.</string>
 
     <string name="task_title_name">Title</string>
     <string name="task_description_name">Description</string>
