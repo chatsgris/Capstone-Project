@@ -28,5 +28,12 @@ limitations under the License.</string>
     <string name="add_widget">Add widget</string>
 
     <string name="place_picker_content_description">Click this image to pick the venue of your task.</string>
+
+    <string name="task_title_name">Title</string>
+    <string name="task_description_name">Description</string>
+    <string name="task_venue_name">Venue</string>
+    <string name="create_task_done_button">Done</string>
+    <string name="place_picker_text">Click to pick a place</string>
+    <string name="delete_task_button">Delete</string>
 </resources>
 
